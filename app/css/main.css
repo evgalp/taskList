@@ -30,6 +30,10 @@ body{
   background-size: cover;
 }
 
+li{
+  list-style-type: none;
+}
+
 a {
   color: var(--text-base);
   text-decoration: none;
