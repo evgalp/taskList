@@ -12,8 +12,9 @@ body{
   --ui-color-2: #0080ff;
   --ui-color-3: #fb5240;
 
-  --ui-color-1-hover: #36C7CD;
-
+  --ui-color-1-hover: #36C738;
+  --ui-color-2-hover: #2196f3;
+  --ui-color-3-hover: #b71c1c;
 
   --font-large: 20px;
   --font-regular: 18px;
@@ -25,27 +26,14 @@ body{
   font-size: var(--font-regular);
   color: var(--text-base);
 
-  /* background-color: var(--body-bg); */
   background-image: url('../img/bg.png');
+  background-size: cover;
 }
 
 a {
   color: var(--text-base);
   text-decoration: none;
 }
-
-.main-wrapper{
-  display: flex;
-  justify-content: center;
-}
-.taskboard{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 80%;
-}
-.taskboard__title{}
-.taskboard__add-task-form{}
 
 .ui-title{
   font-size: var(--font-large);
@@ -70,11 +58,11 @@ a {
 
 .ui-separator{
   height: 1px;
-  width: 90%;
+  width: 70%;
   background-color: var(--text-light);
   opacity: 0.5;
-  margin: 10px auto;
-  margin-bottom: 20px;
+  margin: 30px auto;
+  margin-bottom: 70px;
 }
 
 .ui-panel{
@@ -122,8 +110,16 @@ a {
   transition: .3s ease;
 }
 .ui-button:hover{
-  background: var(--ui-color-1-hover);
-  border-color: var(--ui-color-1-hover);
+  background: var(--ui-color-2-hover);
+  border-color: var(--ui-color-2-hover);
+}
+.ui-button.ui-button--danger{
+  background-color: var(--ui-color-3);
+  border-color: var(--ui-color-3);
+}
+.ui-button.ui-button--danger:hover{
+  background-color: var(--ui-color-3-hover);
+  border-color: var(--ui-color-3-hover);
 }
 .margin-top-remove{
   margin-top: 0;
@@ -136,4 +132,51 @@ a {
 }
 .margin-right-remove{
   margin-right: 0;
+}
+
+.main-wrapper{
+  display: flex;
+  justify-content: center;
+}
+.taskboard{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+}
+
+.taskboard__task-panel{
+  padding-left: 0;
+}
+.task-panel__task-item{
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid var(--text-base);
+}
+
+.task-item__task-content{
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.task-item__delete-task-button{
+  background-color: var(--ui-color-1);
+  border-color: var(--ui-color-1);
+}
+
+.task-item__delete-task-button:hover{
+  background: var(--ui-color-1-hover);
+  border-color: var(--ui-color-1-hover);
+}
+
+.task-content__task-title{
+  padding-bottom: 5px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.task-content__task-notes{
+  font-size: var(--font-extra-small);
+  text-align: justify;
 }
