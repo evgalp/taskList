@@ -26,8 +26,10 @@ body{
   font-size: var(--font-regular);
   color: var(--text-base);
 
-  background-image: url('../img/bg.png');
-  background-size: cover;
+  background-color: var(--text-base);
+
+  /* background-image: url('../img/bg.png');
+  background-size: cover; */
 }
 
 li{

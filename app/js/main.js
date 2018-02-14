@@ -4,13 +4,10 @@ function getDom() {
   const addTaskNotesInput = taskboard.querySelector('#add-task-notes-input');
   const addTaskBtn = taskboard.querySelector('#add-task-btn');
   const taskPanel = taskboard.querySelector('#task-panel');
+  const filterTasksInput = taskboard.querySelector('#filter-task-input');
   const clearTaskBtn = taskboard.querySelector('#clear-task-btn');
 
-  return {taskboard, addTaskInput, addTaskNotesInput, addTaskBtn, taskPanel, clearTaskBtn};
-}
-
-const model = {
-
+  return {taskboard, addTaskInput, addTaskNotesInput, addTaskBtn, taskPanel, filterTasksInput, clearTaskBtn};
 }
 
 const addTask = {
@@ -48,6 +45,7 @@ const addTask = {
       return;
     }
     let newItem = document.createElement('li');
+    newItem.classList.add('task-li');
     newItem.innerHTML = taskHtml;
     dom.taskPanel.appendChild(newItem)
   }
@@ -71,10 +69,25 @@ const removeTask = {
   }
 }
 
+const filterTasks = {
+  filtetAll: function(){
+    let allTasks = dom.taskPanel.querySelectorAll('.task-li');
+    for (let i = 0; i < allTasks.length; i++) {
+      let taskContent = allTasks[i].querySelector('.task-item__task-content');
+      if (!taskContent.innerText.includes(dom.filterTasksInput.value)) {
+        allTasks[i].style.display = 'none';
+      } else {
+        allTasks[i].style.display = 'block';
+      }
+    }
+  }
+}
+
 function attachCallbacks(dom) {
   dom.addTaskBtn.addEventListener('click', addTask.appendTaskToPanel);
   dom.taskPanel.addEventListener('click', removeTask.removeTaskFromPanel);
   dom.clearTaskBtn.addEventListener('click', removeTask.removeAllTasks);
+  dom.filterTasksInput.addEventListener('keyup', filterTasks.filtetAll);
 }
 
 let dom = getDom();
