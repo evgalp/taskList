@@ -61,13 +61,20 @@ const removeTask = {
         listItem.remove();
       }
     }
+  },
+  removeAllTasks: function(){
+    if (window.confirm('Do you really want to delete ALL tasks ?')) {
+      while (dom.taskPanel.hasChildNodes && dom.taskPanel.firstChild !== null) {
+        dom.taskPanel.removeChild(dom.taskPanel.firstChild)
+      }
+    }
   }
 }
 
 function attachCallbacks(dom) {
   dom.addTaskBtn.addEventListener('click', addTask.appendTaskToPanel);
   dom.taskPanel.addEventListener('click', removeTask.removeTaskFromPanel);
-
+  dom.clearTaskBtn.addEventListener('click', removeTask.removeAllTasks);
 }
 
 let dom = getDom();
