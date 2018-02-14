@@ -3,11 +3,49 @@ function getDom() {
   const addTaskInput = taskboard.querySelector('#add-task-input');
   const addTaskNotesInput = taskboard.querySelector('#add-task-notes-input');
   const addTaskBtn = taskboard.querySelector('#add-task-btn');
+  const switchThemeBtn = taskboard.querySelector('#switch-theme-btn');
   const taskPanel = taskboard.querySelector('#task-panel');
   const filterTasksInput = taskboard.querySelector('#filter-task-input');
   const clearTaskBtn = taskboard.querySelector('#clear-task-btn');
 
-  return {taskboard, addTaskInput, addTaskNotesInput, addTaskBtn, taskPanel, filterTasksInput, clearTaskBtn};
+  return {taskboard, addTaskInput, addTaskNotesInput, addTaskBtn, switchThemeBtn, taskPanel, filterTasksInput, clearTaskBtn};
+}
+
+const switchTheme = {
+  isDefault: true,
+  switchCurrentTheme: function () {
+    if (switchTheme.isDefault) {
+      switchTheme.isDefault = !switchTheme.isDefault;
+      document.body.style.setProperty('--body-bg', '#ffffff');
+      document.body.style.setProperty('--panel-bg', '#f7f7f7');
+      document.body.style.setProperty('--panel-border', '#ededed');
+      document.body.style.setProperty('--text-base', '#4b5157');
+      document.body.style.setProperty('--text-light', '#4b5157');
+      document.body.style.setProperty('--text-accent', '#36c77b');
+      document.body.style.setProperty('--text-button', '#ffffff');
+      document.body.style.setProperty('--ui-color-1', '#36c77b');
+      document.body.style.setProperty('--ui-color-2', '#0080ff');
+      document.body.style.setProperty('--ui-color-3', '#fb5240');
+      document.body.style.setProperty('--ui-color-1-hover', '#36C738');
+      document.body.style.setProperty('--ui-color-2-hover', '#2196f3');
+      document.body.style.setProperty('--ui-color-3-hover', '#b71c1c');
+    } else {
+      switchTheme.isDefault = !switchTheme.isDefault;
+      document.body.style.setProperty('--body-bg', 'rgba(217, 217, 217, 1)');
+      document.body.style.setProperty('--panel-bg', '#202931');
+      document.body.style.setProperty('--panel-border', '#7c8389');
+      document.body.style.setProperty('--text-base', '#7c8389');
+      document.body.style.setProperty('--text-light', '#ececec');
+      document.body.style.setProperty('--text-accent', '#36c77b');
+      document.body.style.setProperty('--text-button', '#ffffff');
+      document.body.style.setProperty('--ui-color-1', '#36c77b');
+      document.body.style.setProperty('--ui-color-2', '#0080ff');
+      document.body.style.setProperty('--ui-color-3', '#fb5240');
+      document.body.style.setProperty('--ui-color-1-hover', '#36C738');
+      document.body.style.setProperty('--ui-color-2-hover', '#2196f3');
+      document.body.style.setProperty('--ui-color-3-hover', '#b71c1c');
+    }
+  }
 }
 
 const addTask = {
@@ -88,6 +126,7 @@ function attachCallbacks(dom) {
   dom.taskPanel.addEventListener('click', removeTask.removeTaskFromPanel);
   dom.clearTaskBtn.addEventListener('click', removeTask.removeAllTasks);
   dom.filterTasksInput.addEventListener('keyup', filterTasks.filtetAll);
+  dom.switchThemeBtn.addEventListener('click', switchTheme.switchCurrentTheme);
 }
 
 let dom = getDom();
