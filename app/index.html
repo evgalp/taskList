@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Task list</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <section class="main-wrapper">
+    <div id="taskboard" class="ui-panel taskboard">
+
+      <div class="ui-row">
+        <div class="ui-title"><span class="ui-title__text">Add more tasks</span></div>
+      </div>
+      <form id="add-task-form" class="taskboard__add-task-form">
+        <div class="ui-row">
+          <div class="ui-formgroup">
+            <label for="add-task-input" class="ui-label">Add a new task:</label>
+            <input id="add-task-input" class="ui-input" type="text" placeholder="Make a coffee...">
+          </div>
+        </div>
+        <div class="ui-row">
+          <a href="#" class="ui-button">Add a task</a>
+        </div>
+      </form>
+
+      <div class="ui-separator"></div>
+
+      <div class="ui-row">
+        <div class="ui-title"><span class="ui-title__text">Current tasks</span></div>
+      </div>
+      <div class="ui-row">
+        <div class="ui-formgroup">
+          <label for="filter-task-input" class="ui-label">Filter tasks:</label>
+          <input id="filter-task-input" class="ui-input" type="text" placeholder="Enter task name to search...">
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <script src="js/main.js" charset="utf-8"></script>
+</body>
+</html>
