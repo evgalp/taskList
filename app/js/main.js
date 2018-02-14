@@ -9,6 +9,10 @@ function getDom() {
   return {taskboard, addTaskInput, addTaskNotesInput, addTaskBtn, taskPanel, clearTaskBtn};
 }
 
+const model = {
+
+}
+
 const addTask = {
   _getInputsData: function () {
     let taskTitle = dom.addTaskInput.value;
@@ -32,7 +36,7 @@ const addTask = {
           <span class="task-content__task-title">${taskData.taskTitle}</span>
           <span class="task-content__task-notes">${taskData.taskNote}</span>
         </div>
-        <a href="#" class="ui-button task-item__delete-task-button">done</a>
+        <button class="ui-button task-item__delete-task-button">done</button>
       </div>`;
 
       return taskItemHtml;
@@ -49,5 +53,22 @@ const addTask = {
   }
 }
 
+const removeTask = {
+  removeTaskFromPanel: function(e){
+    if (e.target.classList.contains('task-item__delete-task-button')) {
+      if (window.confirm('Do you really want to delete this task ?')) {
+        let listItem = e.target.parentNode.parentNode;
+        listItem.remove();
+      }
+    }
+  }
+}
+
+function attachCallbacks(dom) {
+  dom.addTaskBtn.addEventListener('click', addTask.appendTaskToPanel);
+  dom.taskPanel.addEventListener('click', removeTask.removeTaskFromPanel);
+
+}
+
 let dom = getDom();
-dom.addTaskBtn.addEventListener('click', addTask.appendTaskToPanel);
+attachCallbacks(dom);
