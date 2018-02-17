@@ -16,11 +16,11 @@ const switchTheme = {
   switchCurrentTheme: function () {
     if (switchTheme.isDefault) {
       switchTheme.isDefault = !switchTheme.isDefault;
-      document.body.style.setProperty('--body-bg', '#ffffff');
-      document.body.style.setProperty('--panel-bg', '#f7f7f7');
-      document.body.style.setProperty('--panel-border', '#ededed');
-      document.body.style.setProperty('--text-base', '#4b5157');
-      document.body.style.setProperty('--text-light', '#4b5157');
+      document.body.style.setProperty('--body-bg', 'rgba(217, 217, 217, 1)');
+      document.body.style.setProperty('--panel-bg', '#202931');
+      document.body.style.setProperty('--panel-border', '#7c8389');
+      document.body.style.setProperty('--text-base', '#7c8389');
+      document.body.style.setProperty('--text-light', '#ececec');
       document.body.style.setProperty('--text-accent', '#36c77b');
       document.body.style.setProperty('--text-button', '#ffffff');
       document.body.style.setProperty('--ui-color-1', '#36c77b');
@@ -31,11 +31,11 @@ const switchTheme = {
       document.body.style.setProperty('--ui-color-3-hover', '#b71c1c');
     } else {
       switchTheme.isDefault = !switchTheme.isDefault;
-      document.body.style.setProperty('--body-bg', 'rgba(217, 217, 217, 1)');
-      document.body.style.setProperty('--panel-bg', '#202931');
-      document.body.style.setProperty('--panel-border', '#7c8389');
-      document.body.style.setProperty('--text-base', '#7c8389');
-      document.body.style.setProperty('--text-light', '#ececec');
+      document.body.style.setProperty('--body-bg', '#ffffff');
+      document.body.style.setProperty('--panel-bg', '#f7f7f7');
+      document.body.style.setProperty('--panel-border', '#ededed');
+      document.body.style.setProperty('--text-base', '#4b5157');
+      document.body.style.setProperty('--text-light', '#4b5157');
       document.body.style.setProperty('--text-accent', '#36c77b');
       document.body.style.setProperty('--text-button', '#ffffff');
       document.body.style.setProperty('--ui-color-1', '#36c77b');
@@ -85,7 +85,7 @@ const addTask = {
     let newItem = document.createElement('li');
     newItem.classList.add('task-li');
     newItem.innerHTML = taskHtml;
-    dom.taskPanel.appendChild(newItem)
+    dom.taskPanel.appendChild(newItem);
   }
 }
 
@@ -108,7 +108,7 @@ const removeTask = {
 }
 
 const filterTasks = {
-  filtetAll: function(){
+  filterAll: function(){
     let allTasks = dom.taskPanel.querySelectorAll('.task-li');
     for (let i = 0; i < allTasks.length; i++) {
       let taskContent = allTasks[i].querySelector('.task-item__task-content');
@@ -125,7 +125,7 @@ function attachCallbacks(dom) {
   dom.addTaskBtn.addEventListener('click', addTask.appendTaskToPanel);
   dom.taskPanel.addEventListener('click', removeTask.removeTaskFromPanel);
   dom.clearTaskBtn.addEventListener('click', removeTask.removeAllTasks);
-  dom.filterTasksInput.addEventListener('keyup', filterTasks.filtetAll);
+  dom.filterTasksInput.addEventListener('keyup', filterTasks.filterAll);
   dom.switchThemeBtn.addEventListener('click', switchTheme.switchCurrentTheme);
 }
 
