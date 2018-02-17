@@ -59,22 +59,32 @@ const addTask = {
       return {taskTitle, taskNote};
     }
   },
+  _getCurrentDate: function(){
+    let now = new Date();
+    let date = now.toDateString();
+    let time = now.toTimeString().split(' ')[0];
+    return `${date} at ${time}`;
+  },
   _generateTaskItemHtml: function () {
     let taskData = addTask._getInputsData();
-    if (!taskData) {
-      return false;
-    }
+    if (!taskData) {return false;}
+    let taskDate = addTask._getCurrentDate();
 
     let taskItemHtml = `
       <div class="ui-row task-panel__task-item">
         <div class="task-item__task-content">
           <span class="task-content__task-title">${taskData.taskTitle}</span>
+          <span class="task-content__task-date">${taskDate}</span>
           <span class="task-content__task-notes">${taskData.taskNote}</span>
         </div>
         <button class="ui-button task-item__delete-task-button">done</button>
       </div>`;
 
       return taskItemHtml;
+  },
+  _clearInputsData: function() {
+    dom.addTaskInput.value = '';
+    dom.addTaskNotesInput.value = '';
   },
   appendTaskToPanel: function () {
     let taskHtml = addTask._generateTaskItemHtml();
@@ -86,6 +96,7 @@ const addTask = {
     newItem.classList.add('task-li');
     newItem.innerHTML = taskHtml;
     dom.taskPanel.appendChild(newItem);
+    addTask._clearInputsData();
   }
 }
 

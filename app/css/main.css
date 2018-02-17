@@ -183,7 +183,12 @@ button{
   font-weight: 700;
   color: var(--text-light);
 }
-
+.task-content__task-date{
+  font-size: var(--font-extra-small);
+  color: var(--text-accent);
+  font-style: italic;
+  padding-bottom: 5px;
+}
 .task-content__task-notes{
   font-size: var(--font-extra-small);
   text-align: justify;
