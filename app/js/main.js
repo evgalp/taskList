@@ -49,6 +49,8 @@ const switchTheme = {
 }
 
 const addTask = {
+  _currentTask: undefined,
+  _currentTasksBase: undefined,
   _getCurrentDate: function(){
     let now = new Date();
     let date = now.toDateString();
@@ -58,6 +60,10 @@ const addTask = {
       timeStamp: now.getTime()
     };
   },
+  _updateLocalStorage: function(){
+    localStorage.setItem("tasksBase", JSON.stringify(addTask._currentTasksBase));
+    console.log('updated local storage');
+  },
   _getTaskData: function () {
     let timeAdded = addTask._getCurrentDate();
     let taskId = timeAdded.timeStamp;
@@ -65,19 +71,14 @@ const addTask = {
     let taskNote = dom.addTaskNotesInput.value;
     let taskDate = timeAdded.dateString;
 
-    if (taskTitle === "") {
-      return false;
-    } else {
-      return {taskId, taskTitle, taskDate, taskNote}
-    }
+    return {taskId, taskTitle, taskDate, taskNote}
   },
-  _clearInputsData: function() {
+  _clearInputsData: function () {
     dom.addTaskInput.value = '';
     dom.addTaskNotesInput.value = '';
   },
-  _generateTaskItemHtml: function () {
-    let taskData = addTask._getTaskData();
-    if (!taskData) {return false;}
+  _generateTaskItemHtml: function (taskObj) {
+    let taskData = taskObj;
 
     let taskItemHtml = `
       <div class="ui-row task-panel__task-item">
@@ -91,53 +92,46 @@ const addTask = {
 
       return taskItemHtml;
   },
-  appendTaskToPanel: function () {
-    let taskHtml = addTask._generateTaskItemHtml();
-    if (!taskHtml) {
-      alert(`Task can't be added without a title`);
-      return;
-    }
+  _appendTaskToPanel: function (taskObj) {
+    let taskHtml = addTask._generateTaskItemHtml(taskObj);
     let newItem = document.createElement('li');
     newItem.classList.add('task-li');
     newItem.innerHTML = taskHtml;
     dom.taskPanel.appendChild(newItem);
-    addTask.addTaskToLocalStorage();
-    addTask._clearInputsData();
   },
-  addTaskToLocalStorage: function() {
+  _addTaskToTasksBase: function() {
     let tasksBase;
-    let taskData = addTask._getTaskData();
-
-    if (localStorage.getItem("tasksBase") === null) {
-      tasksBase = {};
-    } else {
-      tasksBase = JSON.parse(localStorage.getItem("tasksBase"));
-    }
-
-    tasksBase[taskData.taskId] = taskData;
-    localStorage.setItem("tasksBase", JSON.stringify(tasksBase));
+    let taskData = addTask._currentTask;
+    addTask._currentTasksBase[taskData.taskId] = taskData;
+    addTask._updateLocalStorage();
   },
-  getStorageContent: function() {
+  _removeTaskFromTasksBase: function(taskId) {
+    delete addTask._currentTasksBase[taskId];
+    addTask._updateLocalStorage();
+  },
+  _getTasksBase: function() {
     if (localStorage.getItem("tasksBase") !== null) {
-      let tasksBase = JSON.parse(localStorage.getItem("tasksBase"));
-      for (task in tasksBase) {
-        taskData = tasksBase[task];
-        let newItem = document.createElement('li');
-        newItem.classList.add('task-li');
-        let taskItemHtml = `
-          <div class="ui-row task-panel__task-item">
-            <div class="task-item__task-content">
-              <span class="task-content__task-title">${taskData.taskTitle}</span>
-              <span class="task-content__task-date">${taskData.taskDate}</span>
-              <span class="task-content__task-notes">${taskData.taskNote}</span>
-            </div>
-            <button class="ui-button task-item__delete-task-button">done</button>
-          </div>`;
-        newItem.innerHTML = taskItemHtml;
-        dom.taskPanel.appendChild(newItem);
-      }
+      addTask._currentTasksBase = JSON.parse(localStorage.getItem("tasksBase"));
     } else {
-      return false;
+      addTask._currentTasksBase = {};
+    }
+  },
+  addNewTask: function(){
+    addTask._currentTask = addTask._getTaskData();
+    if (addTask._currentTask.taskTitle === '') {
+      alert(`Can't add task without title`);
+      return;
+    }
+    addTask._appendTaskToPanel(addTask._currentTask);
+    addTask._addTaskToTasksBase(addTask._currentTask);
+    addTask._getTasksBase();
+  },
+
+  renderStorageContent: function() {
+    addTask._getTasksBase();
+    for (task in addTask._currentTasksBase) {
+      taskData = addTask._currentTasksBase[task];
+      addTask._appendTaskToPanel(taskData);
     }
   }
 }
@@ -148,6 +142,7 @@ const removeTask = {
       if (window.confirm('Do you really want to delete this task ?')) {
         let listItem = e.target.parentNode.parentNode;
         listItem.remove();
+        // removeTaskFromStorage();
       }
     }
   },
@@ -175,8 +170,9 @@ const filterTasks = {
 }
 
 function attachCallbacks(dom) {
-  addTask.getStorageContent();
-  dom.addTaskBtn.addEventListener('click', addTask.appendTaskToPanel);
+  addTask._getTasksBase();
+  addTask.renderStorageContent();
+  dom.addTaskBtn.addEventListener('click', addTask.addNewTask);
   dom.taskPanel.addEventListener('click', removeTask.removeTaskFromPanel);
   dom.clearTaskBtn.addEventListener('click', removeTask.removeAllTasks);
   dom.filterTasksInput.addEventListener('keyup', filterTasks.filterAll);
