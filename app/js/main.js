@@ -49,42 +49,47 @@ const switchTheme = {
 }
 
 const addTask = {
-  _getInputsData: function () {
-    let taskTitle = dom.addTaskInput.value;
-    let taskNote = dom.addTaskNotesInput.value;
-
-    if (taskTitle === "") {
-      return false;
-    } else {
-      return {taskTitle, taskNote};
-    }
-  },
   _getCurrentDate: function(){
     let now = new Date();
     let date = now.toDateString();
     let time = now.toTimeString().split(' ')[0];
-    return `${date} at ${time}`;
+    return {
+      dateString: `${date} at ${time}`,
+      timeStamp: now.getTime()
+    };
+  },
+  _getTaskData: function () {
+    let timeAdded = addTask._getCurrentDate();
+    let taskId = timeAdded.timeStamp;
+    let taskTitle = dom.addTaskInput.value;
+    let taskNote = dom.addTaskNotesInput.value;
+    let taskDate = timeAdded.dateString;
+
+    if (taskTitle === "") {
+      return false;
+    } else {
+      return {taskId, taskTitle, taskDate, taskNote}
+    }
+  },
+  _clearInputsData: function() {
+    dom.addTaskInput.value = '';
+    dom.addTaskNotesInput.value = '';
   },
   _generateTaskItemHtml: function () {
-    let taskData = addTask._getInputsData();
+    let taskData = addTask._getTaskData();
     if (!taskData) {return false;}
-    let taskDate = addTask._getCurrentDate();
 
     let taskItemHtml = `
       <div class="ui-row task-panel__task-item">
         <div class="task-item__task-content">
           <span class="task-content__task-title">${taskData.taskTitle}</span>
-          <span class="task-content__task-date">${taskDate}</span>
+          <span class="task-content__task-date">${taskData.taskDate}</span>
           <span class="task-content__task-notes">${taskData.taskNote}</span>
         </div>
         <button class="ui-button task-item__delete-task-button">done</button>
       </div>`;
 
       return taskItemHtml;
-  },
-  _clearInputsData: function() {
-    dom.addTaskInput.value = '';
-    dom.addTaskNotesInput.value = '';
   },
   appendTaskToPanel: function () {
     let taskHtml = addTask._generateTaskItemHtml();
@@ -96,7 +101,44 @@ const addTask = {
     newItem.classList.add('task-li');
     newItem.innerHTML = taskHtml;
     dom.taskPanel.appendChild(newItem);
+    addTask.addTaskToLocalStorage();
     addTask._clearInputsData();
+  },
+  addTaskToLocalStorage: function() {
+    let tasksBase;
+    let taskData = addTask._getTaskData();
+
+    if (localStorage.getItem("tasksBase") === null) {
+      tasksBase = {};
+    } else {
+      tasksBase = JSON.parse(localStorage.getItem("tasksBase"));
+    }
+
+    tasksBase[taskData.taskId] = taskData;
+    localStorage.setItem("tasksBase", JSON.stringify(tasksBase));
+  },
+  getStorageContent: function() {
+    if (localStorage.getItem("tasksBase") !== null) {
+      let tasksBase = JSON.parse(localStorage.getItem("tasksBase"));
+      for (task in tasksBase) {
+        taskData = tasksBase[task];
+        let newItem = document.createElement('li');
+        newItem.classList.add('task-li');
+        let taskItemHtml = `
+          <div class="ui-row task-panel__task-item">
+            <div class="task-item__task-content">
+              <span class="task-content__task-title">${taskData.taskTitle}</span>
+              <span class="task-content__task-date">${taskData.taskDate}</span>
+              <span class="task-content__task-notes">${taskData.taskNote}</span>
+            </div>
+            <button class="ui-button task-item__delete-task-button">done</button>
+          </div>`;
+        newItem.innerHTML = taskItemHtml;
+        dom.taskPanel.appendChild(newItem);
+      }
+    } else {
+      return false;
+    }
   }
 }
 
@@ -133,6 +175,7 @@ const filterTasks = {
 }
 
 function attachCallbacks(dom) {
+  addTask.getStorageContent();
   dom.addTaskBtn.addEventListener('click', addTask.appendTaskToPanel);
   dom.taskPanel.addEventListener('click', removeTask.removeTaskFromPanel);
   dom.clearTaskBtn.addEventListener('click', removeTask.removeAllTasks);
