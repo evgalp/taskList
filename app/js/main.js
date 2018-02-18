@@ -78,14 +78,12 @@ const addTask = {
     dom.addTaskNotesInput.value = '';
   },
   _generateTaskItemHtml: function (taskObj) {
-    let taskData = taskObj;
-
     let taskItemHtml = `
       <div class="ui-row task-panel__task-item">
         <div class="task-item__task-content">
-          <span class="task-content__task-title">${taskData.taskTitle}</span>
-          <span class="task-content__task-date">${taskData.taskDate}</span>
-          <span class="task-content__task-notes">${taskData.taskNote}</span>
+          <span class="task-content__task-title">${taskObj.taskTitle}</span>
+          <span class="task-content__task-date">${taskObj.taskDate}</span>
+          <span class="task-content__task-notes">${taskObj.taskNote}</span>
         </div>
         <button class="ui-button task-item__delete-task-button">done</button>
       </div>`;
@@ -103,10 +101,6 @@ const addTask = {
     let tasksBase;
     let taskData = addTask._currentTask;
     addTask._currentTasksBase[taskData.taskId] = taskData;
-    addTask._updateLocalStorage();
-  },
-  _removeTaskFromTasksBase: function(taskId) {
-    delete addTask._currentTasksBase[taskId];
     addTask._updateLocalStorage();
   },
   _getTasksBase: function() {
@@ -137,6 +131,14 @@ const addTask = {
 }
 
 const removeTask = {
+  _clearLocalStorage: function() {
+    localStorage.setItem("tasksBase", JSON.stringify({}));
+    console.log('cleared local storage');
+  },
+  _removeTaskFromTasksBase: function(taskId) {
+    delete addTask._currentTasksBase[taskId];
+    addTask._updateLocalStorage();
+  },
   removeTaskFromPanel: function(e){
     if (e.target.classList.contains('task-item__delete-task-button')) {
       if (window.confirm('Do you really want to delete this task ?')) {
@@ -151,6 +153,7 @@ const removeTask = {
       while (dom.taskPanel.hasChildNodes && dom.taskPanel.firstChild !== null) {
         dom.taskPanel.removeChild(dom.taskPanel.firstChild)
       }
+      removeTask._clearLocalStorage();
     }
   }
 }
