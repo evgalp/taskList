@@ -94,6 +94,7 @@ const addTask = {
     let taskHtml = addTask._generateTaskItemHtml(taskObj);
     let newItem = document.createElement('li');
     newItem.classList.add('task-li');
+    newItem.dataset.id = taskObj.taskId;
     newItem.innerHTML = taskHtml;
     dom.taskPanel.appendChild(newItem);
   },
@@ -119,6 +120,7 @@ const addTask = {
     addTask._appendTaskToPanel(addTask._currentTask);
     addTask._addTaskToTasksBase(addTask._currentTask);
     addTask._getTasksBase();
+    addTask._clearInputsData();
   },
 
   renderStorageContent: function() {
@@ -133,7 +135,7 @@ const addTask = {
 const removeTask = {
   _clearLocalStorage: function() {
     localStorage.setItem("tasksBase", JSON.stringify({}));
-    console.log('cleared local storage');
+    console.log('cleared local storage tasksBase');
   },
   _removeTaskFromTasksBase: function(taskId) {
     delete addTask._currentTasksBase[taskId];
@@ -144,7 +146,7 @@ const removeTask = {
       if (window.confirm('Do you really want to delete this task ?')) {
         let listItem = e.target.parentNode.parentNode;
         listItem.remove();
-        // removeTaskFromStorage();
+        removeTask._removeTaskFromTasksBase(listItem.dataset.id);
       }
     }
   },
